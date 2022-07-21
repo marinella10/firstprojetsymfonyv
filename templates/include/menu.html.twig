@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="logo container-fluid">
+        <a class="navbar-brand" href="{{ path('app_produits_index') }}">
+            <img src="{{ asset('image/Vinted-logo.jpg') }}"alt="logo" width="35%">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="lien1 nav-link active" aria-current="page" href="{{ path('app_accueil') }}">ACCUEIL</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="lien2 nav-link active" aria-current="page" href="{{ path('app_produits_index') }}">PRODUITS</a>
+                </li>
+
+                {% if is_granted("ROLE_ADMIN") %}
+
+                <li class="nav-item">
+                    <a class="lien3 nav-link active" aria-current="page" href="{{ path('admin') }}">ADMINISTRATION</a>
+                </li>
+                {% endif %}
+
+            </ul>
+
+
+            <form class="d-flex">
+                <a href="{{ path("app_register") }}" class="btn btn-outline-info mx-2" type="submit">S'INSCRIRE</a>
+
+                {%if is_granted('ROLE_USER') %}
+                    <a href="{{ path("app_logout") }}" class="btn btn-outline-info mx-2" type="submit">DECONNEXION</a>
+                {% else %}
+                    <a href="{{ path("app_login") }}" class="btn btn-outline-info mx-2" type="submit">CONNEXION</a>
+                {% endif %}
+                <input class="form-control mx-2" type="search" placeholder="rechercher" aria-label="Search">
+                <button class="btn btn-outline-info" type="submit">Rechercher</button>
+            </form>
+        </div>
+    </div>
+</nav>

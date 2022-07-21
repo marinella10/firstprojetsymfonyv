@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits {% endblock %}
+
+{% block body %}
+
+<div class="text-center text-dark pt-3">
+    <h1><span>Page</span>   de   <span>Produits</span></h1>
+
+    <div class="count">
+        <strong> Nombre de produits : {{ pagination.getTotalItemCount }} </strong>
+    </div>
+
+</div>
+
+<div class="navigation text-dark" style="margin-top: 20px">
+    {{ knp_pagination_render(pagination) }}
+</div>
+
+    <!-- acueil visiteur-->
+
+<div class="text-center px-5">
+
+    {% if app.user %}
+        <div>
+            <a class="btn-hover color-6 mt-3 mb-3 p-3" href="{{ path('app_produits_new') }}">Créer un nouveau produit</a>
+        </div>
+
+    {% endif %}
+
+    <div>
+        <i class="fa-solid fa-asterisk pt-5"></i> <strong class="der">Dernier
+            produit {{ dernierProduit.nomProduit }}</strong>
+    </div>
+</div>
+<!--Affichage pour les visiteurs-->
+
+<div class="container">
+     <div class="row">
+        {% for produit in pagination %}
+        <div class="col-md-4 col-sm-12 pt-3" id="produits-visiteur">
+            <div class="card bg-secondary rounded pt-3">
+                <div class="card-body">
+                    <img width="100%" src="/image/{{ produit.imageProduit }}" alt="{{ produit.nomProduit }}"
+                         title="{{ produit.nomProduit }}">
+                    <h5 class=" text-center text-white scard-title mt-5">{{ produit.nomProduit }}</h5>
+                    <p><b class="text-white pt-5"> Id produit:</b> {{ produit.id }}</b></p>
+                    <p><b class="text-white">Nom du produit:</b> {{ produit.nomProduit }}</p>
+                    <p><b class="text-white"> Description du produit:</b> {{ produit.descriptionProduit }}</p>
+                    <p><b class="text-white">Stock produits:</b> {{ produit.stockProduit ? 'OUI' : 'NON' }}</p>
+                    <p><b class="text-white"> Date
+                            produit: </b>{{ produit.dateProduit ? produit.dateProduit|date('Y-m-d') : '' }}</p>
+                    <p><b class="text-white"> Prix produit:</b> {{ produit.prixProduit }} </p>
+
+
+                    <p class="text-warning"><strong>Nom du vendeur : </strong> {{ produit.Utilisateurs.Email }}</p>
+
+
+                    <!-- ref = cle etrangere -->
+
+                    <p><b class=" ref text-white"> <strong>Référence du
+                                produit:</strong></b> {{ produit.numero.numeroReference }}</p>
+
+                    <!--Plusieurs distributeur donc boucle for + champs table distributeurs = alias + getter -->
+
+                    {% for distributeur in produit.distributeur %}
+                        <p><b class="dist text-white p-2">Distributeur(s)
+                                : </b> {{ distributeur.nomDistributeur }}</p>
+                    {% endfor %}
+
+                    <p class="p-3"><b class=" cat text-white">Catégorie(s) : </b> {{ produit.Categories.nomCategorie }}
+                    </p>
+
+
+                    <div class="text-center pt-3">
+
+                        <a class="btn btn-info mt-3 mb-3 m-3"
+                           href="{{ path('app_produits_show', {'id': produit.id}) }}">Montrer</a>
+
+                        {% if app.user %}
+                            <a class="btn btn-light mt-3 mb-3 m-3"
+                               href="{{ path('app_produits_edit', {'id': produit.id}) }}">Editer</a>
+
+                            {% include "produits/_delete_form.html.twig" %}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
+                            {% if app.user %}
+
+                            <div class="mt-3 text-center">
+                                <h4 class="title">TABLEAU DE BORD / {{ app.user.email }}</h4>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            {% endfor %}
+     </div>
+
+
+    <!--Afficher les produits par utilisateurs-->
+    <!-- ESPACE ETULISATEUR -->
+
+    {% if app.user %}
+        <style>
+            #produits-visiteur {
+                display: none;
+            }
+
+            #solde {
+                display: none;
+            }
+
+            #produit-counter {
+                display: none;
+            }
+        </style>
+
+        <!--Afficher les produits pout un utilisateurs inscrit + connecter-->
+
+    <div class="container">
+        <div class="row">
+
+            {% for produit in app.user.produits %}
+
+                <div class="col-md-4 col-sm-12 pt-3 d-flex">
+                    <div class="card1 bg-secondary  rounded">
+                        <img src="/image/{{ produit.imageProduit }}" class="card-img-top" alt="{{ produit.nomProduit }}">
+                        <div class="card-body">
+                            <p><b class="text-white">Nom du produit :</b> {{ produit.nomProduit }}</p>
+                            <p><b class="text-white"> Prix produit:</b> {{ produit.prixProduit }} €</p>
+                            <p class="vend "> <strong> Nom du vendeur : {{ app.user.userIdentifier }}</strong></p>
+
+                            {% if produit.numero is not null %}
+                                <!--alias + champ Produits (cle trangère) + champ Table Reference (getter)-->
+                                <b class="ggg text-white">Référence du produit (cle etrangère) : </b>
+                                <p>{{ produit.Numero }}</p>
+                            {% endif %}
+
+
+                            <!--alias + champ Produits (cle trangère) + champ Table Categories (getter)-->
+                            <p><b class="fff text-white">Categorie : </b>(cle etrangère ManyToOne & OneToMany):
+                                {{ produit.categories.nomCategorie }}</p>
+                            <!--Plusieur distributeur donc boucle for + champs table Distributeurs = alias + getter-->
+
+                            {% for distributeur in produit.distributeur %}
+                                <p><b class="distri text-white">Distributeur(s):</b> {{ distributeur.nomDistributeur }}</p>
+                            {% endfor %}
+
+                            <div class="content-footer mt-3 text-center">
+
+                                <div class="card-body">
+                                    <!--Ici chemin + route + id de chaque produit-->
+                                    <a href="{{ path('app_produits_show', {'id': produit.id}) }}"class="btn2" type="submit">DETAIL</a>
+                                    <!--Supprimer annonces-->
+                                    <div  style="margin-top:20px">
+                                        {{ include('produits/_delete_form.html.twig') }}
+                                    </div>
+                                    <a href="{{ path('app_produits_edit', {'id': produit.id}) }}" class="btn3" type="submit">EDITER</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+    </div>
+
+    {% endif %}
+
+
+</div>
+{% endblock %}

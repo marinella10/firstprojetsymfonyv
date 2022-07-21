@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveaux Produits{% endblock %}
+
+{% block body %}
+    <h1><span>Créer</span>   un  <span>nouveau produit</span></h1>
+
+    {{ include('produits/_form.html.twig') }}
+
+    <a class="retour btn"  href="{{ path('app_produits_index') }}">Retour a la liste</a>
+    <a class="buttoon1  mt-3 btn" href="{{ path('app_produits_index') }}">Annuler</a>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vinted!{% endblock %}
+
+{% block body %}
+
+<div class="text-center example-wrapper pt-5">
+    <h1><span>Bienvenue</span>   sur   <span>Vinted</span></h1>
+
+
+
+    <p class="lead text-info pt-2"> <strong> Le site numéro un mondial de la vente de vêtements d'occasion dans le monde </strong>  </p>
+
+
+            <div class="test row col-sm-4 mx-auto">
+                <img class= "vivi pt-5" width="100%" src="{{ asset("image/vivi.jpg") }}">
+            </div>
+
+
+        <div class="text-center m-5 ">
+            <a class="btn-hover color-6 btn-info p-3" href="{{ path('app_produits_index') }}">Aller à la page produit</a>
+        </div>
+</div>
+
+
+{% endblock %}
+
